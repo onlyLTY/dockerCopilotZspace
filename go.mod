@@ -1,4 +1,4 @@
-module github.com/onlyLTY/oneKeyUpdate/zspace
+module github.com/onlyLTY/dockerCopilotZspace/zspace
 
 go 1.20
 
