@@ -9,8 +9,8 @@ type LoginReq struct {
 	SecretKey string `form:"secretKey,optional"`
 }
 
-type LoginResp struct {
-	Token string `json:"token"`
+type VerifyJwtReq struct {
+	Jwt string `form:"jwt,optional"`
 }
 
 type GetProgressReq struct {
@@ -44,11 +44,6 @@ type GetNewImageReq struct {
 	ImageNameAndTag string `json:"image_name_and_tag"`
 }
 
-type RemoveImageReq struct {
-	Force   bool   `json:"force"`
-	ImageID string `json:"imageID"`
-}
-
 type MsgResp struct {
 	Status string `json:"status"`
 	Msg    string `json:"msg"`
@@ -60,7 +55,7 @@ type Resp struct {
 	Data interface{} `json:"data"`
 }
 
-type ContainerIdReq struct {
+type IdReq struct {
 	Id string `path:"id"`
 }
 
@@ -69,19 +64,27 @@ type ContainerRestoreReq struct {
 }
 
 type ContainerRenameReq struct {
-	ContainerIdReq
+	IdReq
 	NewName string `form:"newName"`
 }
 
+type RemoveImageReq struct {
+	IdReq
+	Force bool `form:"force,default=false"`
+}
+
 type ContainerUpdateReq struct {
-	ContainerIdReq
-	DelOldContainer bool   `form:"delOldContainer"`
-	Proxy           string `form:"proxy,optional"`
+	IdReq
+	DelOldContainer bool   `form:"delOldContainer,default=true"`
 	ImageNameAndTag string `form:"imageNameAndTag"`
-	Name            string `form:"name"`
+	ContainerName   string `form:"containerName"`
 }
 
 type VersionMsgResp struct {
 	Version   string `json:"version"`
 	BuildDate string `json:"build_date"`
+}
+
+type VersionReq struct {
+	Type string `form:"type"`
 }
