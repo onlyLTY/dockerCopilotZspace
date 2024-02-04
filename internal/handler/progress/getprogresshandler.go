@@ -20,7 +20,7 @@ func GetProgressHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		l := progress.NewGetProgressLogic(r.Context(), svcCtx)
 		resp, err := l.GetProgress(&req)
 		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			httpx.WriteJson(w, resp.Code, resp)
 		} else {
 			httpx.OkJsonCtx(r.Context(), w, resp)
 		}

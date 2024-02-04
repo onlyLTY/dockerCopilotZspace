@@ -20,7 +20,7 @@ func UpdateHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		l := container.NewUpdateLogic(r.Context(), svcCtx)
 		resp, err := l.Update(&req)
 		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			httpx.WriteJson(w, resp.Code, resp)
 		} else {
 			httpx.OkJsonCtx(r.Context(), w, resp)
 		}

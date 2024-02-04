@@ -20,7 +20,7 @@ func StartHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		l := container.NewStartLogic(r.Context(), svcCtx)
 		resp, err := l.Start(&req)
 		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			httpx.WriteJson(w, resp.Code, resp)
 		} else {
 			httpx.OkJsonCtx(r.Context(), w, resp)
 		}

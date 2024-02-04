@@ -16,11 +16,10 @@ func RestartHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
-
 		l := container.NewRestartLogic(r.Context(), svcCtx)
 		resp, err := l.Restart(&req)
 		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			httpx.WriteJson(w, resp.Code, resp)
 		} else {
 			httpx.OkJsonCtx(r.Context(), w, resp)
 		}

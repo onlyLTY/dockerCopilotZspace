@@ -13,7 +13,7 @@ func BackupHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		l := container.NewBackupLogic(r.Context(), svcCtx)
 		resp, err := l.Backup()
 		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			httpx.WriteJson(w, resp.Code, resp)
 		} else {
 			httpx.OkJsonCtx(r.Context(), w, resp)
 		}
