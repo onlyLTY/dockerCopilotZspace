@@ -1,7 +1,7 @@
 package utiles
 
 import (
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
 	"os"
 	"path/filepath"
 )

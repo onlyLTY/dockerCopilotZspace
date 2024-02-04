@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	docker "github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/network"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
 	"io"
 	"log"

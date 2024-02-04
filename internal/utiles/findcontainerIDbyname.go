@@ -2,7 +2,7 @@ package utiles
 
 import (
 	"errors"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
 	"strings"
 )
 

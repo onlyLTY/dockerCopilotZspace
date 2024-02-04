@@ -3,8 +3,8 @@ package utiles
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
 	"log"
 	"net/http"
 	"strings"

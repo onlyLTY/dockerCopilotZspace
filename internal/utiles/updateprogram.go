@@ -4,8 +4,8 @@ import (
 	"archive/tar"
 	"compress/gzip"
 	"fmt"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
-	myTypes "github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
+	myTypes "github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
 	"io"
 	"io/ioutil"
@@ -20,8 +20,8 @@ func UpdateProgram(ctx *svc.ServiceContext) (myTypes.MsgResp, error) {
 	if githubProxy != "" {
 		githubProxy = strings.TrimRight(githubProxy, "/") + "/"
 	}
-	versionURL := githubProxy + strings.TrimRight(githubProxy, "/") + "https://raw.githubusercontent.com/onlyLTY/oneKeyUpdate/zspace/version"
-	releaseBaseURL := githubProxy + strings.TrimRight(githubProxy, "/") + "https://github.com/onlyLTY/oneKeyUpdate/releases/download"
+	versionURL := githubProxy + strings.TrimRight(githubProxy, "/") + "https://raw.githubusercontent.com/onlyLTY/dockerCopilotZspace/zspace/version"
+	releaseBaseURL := githubProxy + strings.TrimRight(githubProxy, "/") + "https://github.com/onlyLTY/dockerCopilotZspace/releases/download"
 	resp, err := http.Get(versionURL)
 	if err != nil {
 		logx.Info("没有获取到最新版本信息:", err)
@@ -38,9 +38,9 @@ func UpdateProgram(ctx *svc.ServiceContext) (myTypes.MsgResp, error) {
 	version := strings.TrimSpace(string(versionData))
 	logx.Info("获取到最新版本：", version)
 	// 2. 构造下载链接
-	downloadURL := fmt.Sprintf("%s/%s/onekeyupdate-%s.tar.gz", releaseBaseURL, version, runtime.GOARCH)
+	downloadURL := fmt.Sprintf("%s/%s/dockerCopilotZspace-%s.tar.gz", releaseBaseURL, version, runtime.GOARCH)
 
-	dest := "onekeyupdate.tar.gz"
+	dest := "dockerCopilotZspace.tar.gz"
 
 	if err := downloadFile(downloadURL, dest); err != nil {
 		logx.Error("下载失败:", err)

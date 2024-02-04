@@ -3,11 +3,11 @@ package container
 import (
 	"context"
 	"github.com/google/uuid"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/utiles"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/utiles"
 	"runtime/debug"
 
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

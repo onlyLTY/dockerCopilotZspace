@@ -2,14 +2,14 @@ package version
 
 import (
 	"context"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/config"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/config"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
 
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +33,7 @@ func (l *CheckprogramupdateLogic) CheckProgramUpdate() (resp *types.MsgResp, err
 	if githubProxy != "" {
 		githubProxy = strings.TrimRight(githubProxy, "/") + "/"
 	}
-	versionURL := githubProxy + "https://raw.githubusercontent.com/onlyLTY/oneKeyUpdate/zspace/version"
+	versionURL := githubProxy + "https://raw.githubusercontent.com/onlyLTY/dockerCopilotZspace/zspace/version"
 	remoteVersion, err := fetchVersionFromURL(versionURL)
 	if err != nil {
 		logx.Error("获取最新版本错误", err)
