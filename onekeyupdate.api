@@ -6,8 +6,8 @@ type DoLoginReq {
 type LoginReq {
 	SecretKey string `form:"secretKey,optional"`
 }
-type LoginResp {
-	Token string `json:"token"`
+type VerifyJwtReq {
+	Jwt string `form:"jwt,optional"`
 }
 type GetProgressReq {
 	TaskId string `path:"taskid"`
@@ -23,8 +23,8 @@ type RenameContainerReq {
 	NewName string `json:"newName"`
 }
 type CreateContainerReq {
-	OldName string `json:"old_name"`
-	NewName string `json:"new_name"`
+	OldName         string `json:"old_name"`
+	NewName         string `json:"new_name"`
 	ImageNameAndTag string `json:"image_name_and_tag"`
 }
 type RemoveContainerReq {
@@ -33,21 +33,17 @@ type RemoveContainerReq {
 type getNewImageReq {
 	ImageNameAndTag string `json:"image_name_and_tag"`
 }
-type removeImageReq {
-	Force bool `json:"force"`
-	ImageID string `json:"imageID"`
-}
 type MsgResp {
 	Status string `json:"status"`
-	Msg string `json:"msg"`
+	Msg    string `json:"msg"`
 }
 type Resp {
-	Code int `json:"code"`
-	Msg string `json:"msg"`
+	Code int         `json:"code"`
+	Msg  string      `json:"msg"`
 	Data interface{} `json:"data"`
 }
 
-type ContainerIdReq {
+type IdReq {
 	Id string `path:"id"`
 }
 
@@ -56,106 +52,50 @@ type ContainerRestoreReq {
 }
 
 type ContainerRenameReq {
-	ContainerIdReq
+	IdReq
 	NewName string `form:"newName"`
 }
 
+type RemoveImageReq {
+	IdReq
+	Force bool `form:"force,default=false"`
+}
+
 type ContainerUpdateReq {
-	ContainerIdReq
-	DelOldContainer bool `form:"delOldContainer"`
-	Proxy string `form:"proxy,optional"`
+	IdReq
+	DelOldContainer bool   `form:"delOldContainer,default=true"`
 	ImageNameAndTag string `form:"imageNameAndTag"`
-	Name string `form:"name"`
+	ContainerName   string `form:"containerName"`
 }
 
 type VersionMsgResp {
-	Version string `json:"version"`
+	Version   string `json:"version"`
 	BuildDate string `json:"build_date"`
 }
 
-service oneKeyUpdate {
+type VersionReq {
+	Type string `form:"type"`
+}
+
+service dockerCopilot {
 	@handler webindex
 	get / () returns ()
 }
 
 @server(
-	prefix: /
-	group: Login
-	middleware: IndexCheckMiddleware
+	prefix: /api
+	group: auth
 )
-service oneKeyUpdate {
-	@handler DoLogin
-	post /login (DoLoginReq) returns ()
-
-	@handler LoginIndex
-	get /login () returns ()
-}
-
-@server(
-	prefix: /containersManager
-	group: containersManager
-	middleware: CookieCheckMiddleware
-)
-service oneKeyUpdate {
-	@handler ContainersManagerIndex
-	get / () returns ()
-
-	@handler StartContainer
-	post /start_container (StartContainerReq) returns (MsgResp)
-
-	@handler StopContainer
-	post /stop_container (StopContainerReq) returns (MsgResp)
-
-	@handler RenameContainer
-	post /rename_container (RenameContainerReq) returns (MsgResp)
-
-	@handler CreateContainer
-	post /create_container (CreateContainerReq) returns (MsgResp)
-
-	@handler RemoveContainer
-	post /remove_container (RemoveContainerReq) returns (MsgResp)
-}
-
-@server(
-	prefix: /imagesManager
-	group: imagesManager
-	middleware: CookieCheckMiddleware
-)
-service oneKeyUpdate {
-	@handler imagesManagerIndex
-	get / () returns ()
-
-	@handler getNewImage
-	post /get_new_image (getNewImageReq) returns (MsgResp)
-
-	@handler RemoveImage
-	post /remove_image (removeImageReq) returns (MsgResp)
-}
-
-@server(
-	prefix: /version
-	group: version
-	middleware: CookieCheckMiddleware
-)
-service oneKeyUpdate {
-	@handler versionIndex
-	get / () returns ()
-
-	@handler getVersions
-	get /get_version () returns (VersionMsgResp)
-
-	@handler updateprogram
-	get /updateprogram () returns (VersionMsgResp)
-
-	@handler checkprogramupdate
-	get /checkprogramupdate () returns (VersionMsgResp)
+service dockerCopilot {
+	@handler Login
+	post /auth (LoginReq) returns (Resp);
 }
 
 @server(
 	prefix: /api
 	group: progress
 )
-service oneKeyUpdate {
+service dockerCopilot {
 	@handler GetProgress
 	get /progress/:taskid (GetProgressReq) returns (Resp);
 }
@@ -163,8 +103,27 @@ service oneKeyUpdate {
 @server(
 	prefix: /api
 	group: container
+	jwt: Auth
 )
-service oneKeyUpdate {
+service dockerCopilot {
+	@handler containersList
+	get /containers returns (Resp)
+
+	@handler start
+	post /container/:id/start (IdReq) returns (Resp)
+
+	@handler stop
+	post /container/:id/stop (IdReq) returns (Resp)
+
+	@handler restart
+	post /container/:id/restart (IdReq) returns (Resp)
+
+	@handler rename
+	post /container/:id/rename (ContainerRenameReq) returns (Resp)
+
+	@handler update
+	post /container/:id/update (ContainerUpdateReq) returns (Resp)
+
 	@handler backup
 	get /container/backup returns (Resp)
 
@@ -173,4 +132,33 @@ service oneKeyUpdate {
 
 	@handler restore
 	post /container/backups/:filename/restore (ContainerRestoreReq) returns (Resp)
+
+	@handler delRestore
+	delete /container/backups/:filename (ContainerRestoreReq) returns (Resp)
+}
+
+@server(
+	prefix: /api
+	group: image
+	jwt: Auth
+)
+service dockerCopilot {
+	@handler imagesList
+	get /images returns (Resp)
+
+	@handler remove
+	delete /image/:id (RemoveImageReq) returns (Resp)
+}
+
+@server(
+	prefix: /api
+	group: version
+	jwt: Auth
+)
+service dockerCopilot {
+	@handler version
+	get /version (VersionReq) returns (Resp);
+
+	@handler updateProgram
+	put /program () returns (Resp);
 }
