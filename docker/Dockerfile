@@ -9,12 +9,12 @@ COPY dist/$TARGETPLATFORM/onekeyupdate /app/onekeyupdate
 
 # 复制其他需要的文件或目录，例如 start.sh
 COPY . ${WORKDIR}
-RUN chmod +x start.sh
+RUN apk add --no-cache tzdata \
+    && chmod +x start.sh
 
 ENV account="" \
     secretKey="" \
-    hubURL="https://docker.nju.edu.cn" \
-    githubProxy="https://gh-proxy.com/"
+    TZ="Asia/Shanghai"
 
 VOLUME ["/data"]
 # 指定容器启动时运行的命令
