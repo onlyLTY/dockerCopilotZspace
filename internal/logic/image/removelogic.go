@@ -2,6 +2,8 @@ package image
 
 import (
 	"context"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/utiles"
+	"strings"
 
 	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
 	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
@@ -24,7 +26,20 @@ func NewRemoveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RemoveLogi
 }
 
 func (l *RemoveLogic) Remove(req *types.RemoveImageReq) (resp *types.Resp, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	resp = &types.Resp{}
+	var imageId = req.Id
+	if strings.HasPrefix(imageId, "sha256:") {
+		imageId = strings.TrimPrefix(imageId, "sha256:")
+	}
+	err = utiles.RemoveImage(l.svcCtx, req.Id, req.Force)
+	if err != nil {
+		resp.Code = 409
+		resp.Msg = err.Error()
+		resp.Data = map[string]interface{}{}
+		return resp, nil
+	}
+	resp.Code = 200
+	resp.Msg = "success"
+	resp.Data = map[string]interface{}{}
+	return resp, nil
 }

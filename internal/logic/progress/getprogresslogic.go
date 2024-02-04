@@ -29,13 +29,18 @@ func (l *GetProgressLogic) GetProgress(req *types.GetProgressReq) (resp *types.R
 	if !exists {
 		resp.Code = 400
 		resp.Msg = "taskID 未找到"
+		resp.Data = map[string]interface{}{}
 		return
 	}
 	resp.Code = 200
-	resp.Msg = "success"
-	resp.Data = map[string]string{"schedule": progress.Message}
-	if progress.IsDone {
-		delete(l.svcCtx.ProgressStore, req.TaskId)
+	resp.Msg = progress.Message
+	resp.Data = map[string]interface{}{
+		"taskID":     progress.TaskID,
+		"percentage": progress.Percentage,
+		"message":    progress.Message,
+		"name":       progress.Name,
+		"detailMsg":  progress.DetailMsg,
+		"isDone":     progress.IsDone,
 	}
 	return resp, nil
 }
