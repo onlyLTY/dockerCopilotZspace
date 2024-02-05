@@ -2,9 +2,11 @@ package container
 
 import (
 	"context"
-
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
+	"github.com/google/uuid"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/utiles"
+	"os"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +26,24 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 }
 
 func (l *UpdateLogic) Update(req *types.ContainerUpdateReq) (resp *types.Resp, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	resp = &types.Resp{}
+	taskID := uuid.New().String()
+	go func() {
+		// Catch any panic and log the error
+		defer func() {
+			if r := recover(); r != nil {
+				l.Errorf("Recovered from panic in UpdateContainer: %v", r)
+			}
+		}()
+		imageNameAndTag := req.ImageNameAndTag
+		delOldContainer := os.Getenv("DelOldContainer") != "false"
+		err := utiles.UpdateContainer(l.svcCtx, req.Id, req.ContainerName, imageNameAndTag, delOldContainer, taskID)
+		if err != nil {
+			l.Errorf("Error in UpdateContainer: %v", err)
+		}
+	}()
+	resp.Code = 200
+	resp.Msg = "success"
+	resp.Data = map[string]string{"taskID": taskID}
+	return resp, nil
 }

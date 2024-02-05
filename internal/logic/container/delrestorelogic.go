@@ -2,9 +2,11 @@ package container
 
 import (
 	"context"
+	"os"
+	"regexp"
 
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +26,27 @@ func NewDelRestoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DelRes
 }
 
 func (l *DelRestoreLogic) DelRestore(req *types.ContainerRestoreReq) (resp *types.Resp, err error) {
-	// todo: add your logic here and delete this line
+	resp = &types.Resp{}
+	fileName := CleanFilename(req.Filename)
+	basePath := os.Getenv("BACKUP_DIR") // 从环境变量中获取备份目录
+	if basePath == "" {
+		basePath = "/data/backups" // 如果环境变量未设置，使用默认值
+	}
+	fullPath := basePath + "/" + fileName + ".json"
+	err = os.Remove(fullPath)
+	if err != nil {
+		resp.Code = 400
+		resp.Msg = "删除失败"
+		resp.Data = map[string]interface{}{}
+		return resp, nil
+	}
+	resp.Code = 200
+	resp.Msg = "success"
+	resp.Data = map[string]interface{}{}
+	return resp, nil
+}
 
-	return
+func CleanFilename(filename string) string {
+	reg := regexp.MustCompile("[^a-zA-Z0-9-]+")
+	return reg.ReplaceAllString(filename, "")
 }

@@ -3,12 +3,9 @@ package container
 import (
 	"context"
 	"github.com/google/uuid"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/utiles"
-	"runtime/debug"
-
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
-
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/utiles"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -29,20 +26,23 @@ func NewRestoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RestoreLo
 func (l *RestoreLogic) Restore(req *types.ContainerRestoreReq) (resp *types.Resp, err error) {
 	resp = &types.Resp{}
 	taskID := uuid.New().String()
+	fileName := CleanFilename(req.Filename)
 	go func() {
 		// Catch any panic and log the error
 		defer func() {
 			if r := recover(); r != nil {
-				logx.Errorf("Recovered from panic in restoreContainer: %v\n%s", r, debug.Stack())
+				l.Errorf("Recovered from panic in restoreContainer: %v", r)
 			}
 		}()
-		err := utiles.RestoreContainer(l.svcCtx, req.Filename, taskID)
+		err := utiles.RestoreContainer(l.svcCtx, fileName, taskID)
 		if err != nil {
-			logx.Errorf("Error in restoreContainer: %v", err)
+			l.Errorf("Error in restoreContainer: %v", err)
 		}
 	}()
 	resp.Code = 200
 	resp.Msg = "success"
-	resp.Data = taskID
+	resp.Data = map[string]interface{}{
+		"taskID": taskID,
+	}
 	return resp, nil
 }

@@ -2,10 +2,10 @@ package container
 
 import (
 	"context"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/utiles"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/utiles"
 
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,14 +26,15 @@ func NewBackupLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BackupLogi
 
 func (l *BackupLogic) Backup() (resp *types.Resp, err error) {
 	resp = &types.Resp{}
-	errList, err := utiles.BackupContainer(l.svcCtx)
+	err = utiles.BackupContainer(l.svcCtx)
 	if err != nil {
 		resp.Code = 500
 		resp.Msg = err.Error()
+		resp.Data = map[string]interface{}{}
 		return resp, err
 	}
 	resp.Msg = "success"
 	resp.Code = 200
-	resp.Data = errList
+	resp.Data = map[string]interface{}{}
 	return resp, nil
 }

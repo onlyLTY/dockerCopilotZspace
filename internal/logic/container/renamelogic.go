@@ -2,9 +2,9 @@ package container
 
 import (
 	"context"
-
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/utiles"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +24,16 @@ func NewRenameLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RenameLogi
 }
 
 func (l *RenameLogic) Rename(req *types.ContainerRenameReq) (resp *types.Resp, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	resp = &types.Resp{}
+	err = utiles.RenameContainer(l.svcCtx, req.Id, req.NewName)
+	if err != nil {
+		resp.Code = 400
+		resp.Msg = err.Error()
+		resp.Data = map[string]interface{}{}
+		return resp, err
+	}
+	resp.Code = 200
+	resp.Msg = "success"
+	resp.Data = map[string]interface{}{}
+	return resp, nil
 }

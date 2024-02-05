@@ -3,9 +3,9 @@ package version
 import (
 	"net/http"
 
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/logic/version"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/logic/version"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
@@ -20,9 +20,9 @@ func VersionHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		l := version.NewVersionLogic(r.Context(), svcCtx)
 		resp, err := l.Version(&req)
 		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			httpx.WriteJson(w, resp.Code, resp)
 		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
+			httpx.WriteJson(w, resp.Code, resp)
 		}
 	}
 }

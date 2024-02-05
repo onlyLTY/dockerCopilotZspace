@@ -2,9 +2,10 @@ package version
 
 import (
 	"context"
-
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/config"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/utiles"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +25,44 @@ func NewVersionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *VersionLo
 }
 
 func (l *VersionLogic) Version(req *types.VersionReq) (resp *types.Resp, err error) {
-	// todo: add your logic here and delete this line
+	resp = &types.Resp{}
+	if req.Type == "local" {
+		resp.Code = 200
+		resp.Msg = "success"
+		resp.Data = map[string]string{
+			"version":   config.Version,
+			"buildDate": config.BuildDate,
+		}
+		return resp, nil
+	} else if req.Type == "remote" {
+		remoteVersion, err := utiles.GetRemoteVersion()
+		if err != nil {
+			resp.Code = 500
+			resp.Msg = "获取版本错误" + err.Error()
+			resp.Data = map[string]string{
+				"remoteVersion": config.Version,
+			}
+			return resp, err
+		} else if remoteVersion != config.Version {
+			resp.Code = 200
+			resp.Msg = "程序有更新"
+			resp.Data = map[string]string{
+				"remoteVersion": remoteVersion,
+			}
+			return resp, nil
+		} else {
+			resp.Code = 200
+			resp.Msg = "程序无更新"
+			resp.Data = map[string]string{
+				"remoteVersion": remoteVersion,
+			}
+			return resp, nil
+		}
 
-	return
+	} else {
+		resp.Code = 400
+		resp.Msg = "type 参数错误"
+		resp.Data = map[string]string{}
+		return resp, nil
+	}
 }

@@ -3,12 +3,12 @@ package handler
 import (
 	"net/http"
 
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
 )
 
 func webindexHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Location", "/containersManager")
+		w.Header().Set("Location", "/manager")
 		w.WriteHeader(301)
 	}
 }

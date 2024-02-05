@@ -1,4 +1,4 @@
-# oneKeyUpdate
+# dockerCopilotZspace
 
 <a href="https://www.gnu.org/licenses/agpl-3.0.en.html">
     <img alt="License: AGPLv3" src="https://shields.io/badge/License-AGPL%20v3-blue.svg">
@@ -24,7 +24,7 @@ go版本：1.20+
 
 ## 食用方式
 ------
-绿联以及其他非极空间用户用户请看这里：[绿联用户](https://github.com/onlyLTY/oneKeyUpdate/blob/UGREEN/README.md)
+绿联以及其他非极空间用户用户请看这里：[绿联用户](https://github.com/onlyLTY/dockerCopilotZspace/blob/UGREEN/README.md)
 
 ------
 

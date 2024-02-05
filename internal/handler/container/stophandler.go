@@ -3,9 +3,9 @@ package container
 import (
 	"net/http"
 
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/logic/container"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/types"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/logic/container"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 

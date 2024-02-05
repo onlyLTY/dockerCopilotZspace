@@ -7,10 +7,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
 	"io"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -24,27 +23,32 @@ type Request struct {
 	Header string `header:"X-Header"`
 }
 
-func GetNewJwt(ctx *svc.ServiceContext) (jwt, endpointid string, err error) {
-	var EndpointsIDresponse []map[string]interface{}
+func GetNewJwt(ctx *svc.ServiceContext) (jwt, endpointId string, err error) {
+	var EndpointsIdResponse []map[string]interface{}
 	if ctx.PortainerJwt != "" {
 		resp, err := GetEndpointsID(ctx)
 
 		if err == nil && resp.StatusCode == http.StatusOK {
 
-			err = json.NewDecoder(resp.Body).Decode(&EndpointsIDresponse)
+			err = json.NewDecoder(resp.Body).Decode(&EndpointsIdResponse)
 			if err != nil {
 				return "", "", fmt.Errorf("解析 JSON 错误: %v", err)
 			}
 
-			if len(EndpointsIDresponse) == 0 {
+			if len(EndpointsIdResponse) == 0 {
 				return "", "", fmt.Errorf("未找到 endpoints 信息")
 			}
 
 			// 获取第一个 endpoints 的 ID
-			endpointid := fmt.Sprintf("%v", EndpointsIDresponse[0]["Id"])
-			return ctx.PortainerJwt, endpointid, nil
+			endpointId := fmt.Sprintf("%v", EndpointsIdResponse[0]["Id"])
+			return ctx.PortainerJwt, endpointId, nil
 		}
-		defer resp.Body.Close()
+		defer func(Body io.ReadCloser) {
+			err := Body.Close()
+			if err != nil {
+				logx.Error("关闭resp.Body失败:", err)
+			}
+		}(resp.Body)
 	}
 	logx.Info("未找到jwt或jwt已失效，重新获取jwt")
 	hash := md5.New()
@@ -82,10 +86,15 @@ func GetNewJwt(ctx *svc.ServiceContext) (jwt, endpointid string, err error) {
 	if err != nil {
 		return "", "", err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			logx.Error("关闭resp.Body失败:", err)
+		}
+	}(resp.Body)
 
 	// 读取响应体
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", "", err
 	}
@@ -106,18 +115,18 @@ func GetNewJwt(ctx *svc.ServiceContext) (jwt, endpointid string, err error) {
 	if err != nil {
 		return "", "", err
 	}
-	err = json.NewDecoder(resp.Body).Decode(&EndpointsIDresponse)
+	err = json.NewDecoder(resp.Body).Decode(&EndpointsIdResponse)
 	if err != nil {
 		return "", "", fmt.Errorf("解析 JSON 错误: %v", err)
 	}
 
-	if len(EndpointsIDresponse) == 0 {
+	if len(EndpointsIdResponse) == 0 {
 		return "", "", fmt.Errorf("未找到 endpoints 信息")
 	}
 
 	// 获取第一个 endpoints 的 ID
-	endpointid = fmt.Sprintf("%v", EndpointsIDresponse[0]["Id"])
-	return response["jwt"], endpointid, nil
+	endpointId = fmt.Sprintf("%v", EndpointsIdResponse[0]["Id"])
+	return response["jwt"], endpointId, nil
 }
 
 func GetEndpointsID(svc *svc.ServiceContext) (*http.Response, error) {

@@ -4,12 +4,12 @@ package handler
 import (
 	"net/http"
 
-	auth "github.com/onlyLTY/oneKeyUpdate/zspace/internal/handler/auth"
-	container "github.com/onlyLTY/oneKeyUpdate/zspace/internal/handler/container"
-	image "github.com/onlyLTY/oneKeyUpdate/zspace/internal/handler/image"
-	progress "github.com/onlyLTY/oneKeyUpdate/zspace/internal/handler/progress"
-	version "github.com/onlyLTY/oneKeyUpdate/zspace/internal/handler/version"
-	"github.com/onlyLTY/oneKeyUpdate/zspace/internal/svc"
+	auth "github.com/onlyLTY/dockerCopilotZspace/zspace/internal/handler/auth"
+	container "github.com/onlyLTY/dockerCopilotZspace/zspace/internal/handler/container"
+	image "github.com/onlyLTY/dockerCopilotZspace/zspace/internal/handler/image"
+	progress "github.com/onlyLTY/dockerCopilotZspace/zspace/internal/handler/progress"
+	version "github.com/onlyLTY/dockerCopilotZspace/zspace/internal/handler/version"
+	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )
