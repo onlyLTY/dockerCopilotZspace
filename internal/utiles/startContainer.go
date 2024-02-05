@@ -33,7 +33,7 @@ func StartContainer(ctx *svc.ServiceContext, id string) error {
 			logx.Errorf("Body.Close error: %v", err)
 		}
 	}(resp.Body)
-	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusNotModified {
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusNotModified {
 		errorResponse := ErrorResponse{}
 		err = json.NewDecoder(resp.Body).Decode(&errorResponse)
 		if err != nil {
