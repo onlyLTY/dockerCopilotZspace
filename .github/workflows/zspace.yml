@@ -8,7 +8,6 @@ on:
     paths:
       - version
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,7 +28,7 @@ jobs:
         echo "version=$(cat version)" >> $GITHUB_ENV
 
     - name: Build
-      run: CGO_ENABLED=0 GOARCH=${{ matrix.goarch }} go build -a --trimpath -ldflags="-w -s -X 'github.com/onlyLTY/dockerCopilot/dockerCopilotZspace/zspace/internal/config.Version=${{ env.version }}' -X 'github.com/onlyLTY/dockerCopilotZspace/zspace/internal/config.BuildDate=$(date)'" -o dockerCopilot-new .
+      run: CGO_ENABLED=0 GOARCH=${{ matrix.goarch }} go build -a --trimpath -ldflags="-w -s -X 'github.com/onlyLTY/dockerCopilotZspace/zspace/internal/config.Version=${{ env.version }}' -X 'github.com/onlyLTY/dockerCopilotZspace/zspace/internal/config.BuildDate=$(date)'" -o dockerCopilot-new .
 
     - name: Compress binary
       run: |
