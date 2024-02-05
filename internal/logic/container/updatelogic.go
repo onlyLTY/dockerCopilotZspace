@@ -6,6 +6,7 @@ import (
 	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/svc"
 	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/types"
 	"github.com/onlyLTY/dockerCopilotZspace/zspace/internal/utiles"
+	"os"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -35,7 +36,8 @@ func (l *UpdateLogic) Update(req *types.ContainerUpdateReq) (resp *types.Resp, e
 			}
 		}()
 		imageNameAndTag := req.ImageNameAndTag
-		err := utiles.UpdateContainer(l.svcCtx, req.Id, req.ContainerName, imageNameAndTag, req.DelOldContainer, taskID)
+		delOldContainer := os.Getenv("DelOldContainer") != "false"
+		err := utiles.UpdateContainer(l.svcCtx, req.Id, req.ContainerName, imageNameAndTag, delOldContainer, taskID)
 		if err != nil {
 			l.Errorf("Error in UpdateContainer: %v", err)
 		}
